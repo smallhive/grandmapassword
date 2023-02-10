@@ -8,10 +8,6 @@ import (
 	"github.com/pkg/errors"
 )
 
-type Loader interface {
-	Load(ctx context.Context) ([]string, error)
-}
-
 type FileLoader struct {
 	filePath string
 }
