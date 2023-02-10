@@ -1,4 +1,4 @@
-package passwd
+package word
 
 import (
 	"context"
@@ -6,49 +6,47 @@ import (
 
 	"github.com/pkg/errors"
 	worker_pool "github.com/smallhive/worker-pool"
-
-	"github.com/smallhive/grandmapassword/internal/word"
 )
 
 type Loader interface {
 	Load(ctx context.Context) ([]string, error)
 }
 
-func ProcessDictionary(ctx context.Context, loader Loader) (ProcessedWordSlice, error) {
+func LoadDictionary(ctx context.Context, loader Loader) (Dictionary, error) {
 	words, err := loader.Load(ctx)
 	if err != nil {
 		return nil, errors.Wrap(err, "dictionary load failed")
 	}
 
-	p := processDictionary(ctx, words)
-	return p, nil
+	return loadDictionary(ctx, words), nil
 }
 
-func processDictionary(ctx context.Context, words []string) []ProcessedWord {
+func loadDictionary(ctx context.Context, words []string) Dictionary {
 	pool := worker_pool.NewExportWorker[string](runtime.NumCPU())
+	dictionary := make(Dictionary, 0, len(words))
+	dictionaryChan := make(chan Word, runtime.NumCPU())
 
-	result := make([]ProcessedWord, 0, len(words))
-	processedWordsChan := make(chan ProcessedWord, runtime.NumCPU())
 	go func() {
 		for {
-			pw, ok := <-processedWordsChan
+			pw, ok := <-dictionaryChan
 			if !ok {
 				break
 			}
 
-			result = append(result, pw)
+			dictionary = append(dictionary, pw)
 		}
 	}()
 
 	consumer := func(_ context.Context, task string) {
-		d, err := word.Difficulty(task)
+		d, err := Difficulty(task)
 		if err != nil {
 			return
 		}
 
-		processedWordsChan <- ProcessedWord{
+		dictionaryChan <- Word{
 			Word:       task,
 			Difficulty: d,
+			Length:     len(task),
 		}
 	}
 	pool.Consume(ctx, consumer)
@@ -60,7 +58,7 @@ func processDictionary(ctx context.Context, words []string) []ProcessedWord {
 	}
 
 	pool.Produce(ctx, producer)
-	close(processedWordsChan)
+	close(dictionaryChan)
 
-	return result
+	return dictionary
 }

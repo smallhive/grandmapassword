@@ -2,21 +2,26 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
-	"sort"
 
-	"github.com/smallhive/grandmapassword/internal/dictionary"
 	"github.com/smallhive/grandmapassword/internal/passwd"
+	"github.com/smallhive/grandmapassword/internal/word"
 )
 
 func main() {
 	ctx := context.Background()
 
-	loader := dictionary.NewFileLoader("words.txt")
-	words, err := passwd.ProcessDictionary(ctx, loader)
+	loader := word.NewFileLoader("words.txt")
+	dictionary, err := word.LoadDictionary(ctx, loader)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	sort.Sort(words)
+	pwd, err := passwd.Generate(dictionary)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(pwd)
 }
