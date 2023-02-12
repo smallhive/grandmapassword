@@ -6,6 +6,11 @@ import (
 	"github.com/smallhive/grandmapassword/internal/keyboard"
 )
 
+const (
+	minWordLength = 3
+)
+
+// Difficulty calculates finger moving difficulty for word
 func Difficulty(w string) (int, error) {
 	if len(w) < minWordLength {
 		return 0, errors.Wrap(ErrWordTooShort, w)

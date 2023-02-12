@@ -8,10 +8,6 @@ import (
 	"github.com/smallhive/grandmapassword/internal/keyboard"
 )
 
-const (
-	minWordLength = 3
-)
-
 var (
 	ErrWordTooShort = errors.New("word too short")
 )
@@ -28,8 +24,10 @@ func (w Word) String() string {
 
 type Dictionary []Word
 
-func (a Dictionary) Len() int      { return len(a) }
+func (a Dictionary) Len() int { return len(a) }
+
 func (a Dictionary) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
+
 func (a Dictionary) Less(i, j int) bool {
 	if a[i].Difficulty == a[j].Difficulty {
 		return a[i].Length < a[j].Length

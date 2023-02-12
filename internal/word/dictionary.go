@@ -26,6 +26,7 @@ func loadDictionary(ctx context.Context, words []string) Dictionary {
 	dictionary := make(Dictionary, 0, len(words))
 	dictionaryChan := make(chan Word, runtime.NumCPU())
 
+	// store processed word to the dictionary
 	go func() {
 		for {
 			pw, ok := <-dictionaryChan
