@@ -4,12 +4,18 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/smallhive/grandmapassword/internal/passwd"
 	"github.com/smallhive/grandmapassword/internal/word"
 )
 
+const (
+	minLength = 3
+)
+
 func main() {
+	word.SetMinWordLength(minLength)
 	ctx := context.Background()
 
 	loader := word.NewFileLoader("words.txt")

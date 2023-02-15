@@ -67,36 +67,47 @@ func generateVariants(words word.Dictionary, pairs PairSlice) word.Dictionary {
 	j := len(pairs) - 1
 	size := len(pairs)
 
+	bestDifficulty := 1_000_000
+
 	for i < size && j >= 0 {
 		s := pairs[i].Sum + pairs[j].Sum
 
 		if isLengthOk(s) && !hasIndexIntersection(pairs[i], pairs[j]) {
-			var dictionary word.Dictionary
+			currentDifficulty := words[pairs[i].First].Difficulty +
+				words[pairs[i].Second].Difficulty +
+				words[pairs[j].First].Difficulty +
+				words[pairs[j].Second].Difficulty
 
-			dictionary = append(dictionary,
-				word.Word{
-					Word:       words[pairs[i].First].Word,
-					Length:     words[pairs[i].First].Length,
-					Difficulty: words[pairs[i].First].Difficulty,
-				},
-				word.Word{
-					Word:       words[pairs[i].Second].Word,
-					Length:     words[pairs[i].Second].Length,
-					Difficulty: words[pairs[i].Second].Difficulty,
-				},
-				word.Word{
-					Word:       words[pairs[j].First].Word,
-					Length:     words[pairs[j].First].Length,
-					Difficulty: words[pairs[j].First].Difficulty,
-				},
-				word.Word{
-					Word:       words[pairs[j].Second].Word,
-					Length:     words[pairs[j].Second].Length,
-					Difficulty: words[pairs[j].Second].Difficulty,
-				},
-			)
+			if currentDifficulty < bestDifficulty {
+				bestDifficulty = currentDifficulty
+				var dictionary word.Dictionary
 
-			variants = append(variants, dictionary.Collapse())
+				dictionary = append(dictionary,
+					word.Word{
+						Word:       words[pairs[i].First].Word,
+						Length:     words[pairs[i].First].Length,
+						Difficulty: words[pairs[i].First].Difficulty,
+					},
+					word.Word{
+						Word:       words[pairs[i].Second].Word,
+						Length:     words[pairs[i].Second].Length,
+						Difficulty: words[pairs[i].Second].Difficulty,
+					},
+					word.Word{
+						Word:       words[pairs[j].First].Word,
+						Length:     words[pairs[j].First].Length,
+						Difficulty: words[pairs[j].First].Difficulty,
+					},
+					word.Word{
+						Word:       words[pairs[j].Second].Word,
+						Length:     words[pairs[j].Second].Length,
+						Difficulty: words[pairs[j].Second].Difficulty,
+					},
+				)
+
+				variants = append(variants, dictionary.Collapse())
+			}
+
 			i++
 			j--
 		} else if s < minLength {

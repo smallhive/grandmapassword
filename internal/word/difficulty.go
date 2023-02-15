@@ -6,9 +6,13 @@ import (
 	"github.com/smallhive/grandmapassword/internal/keyboard"
 )
 
-const (
-	minWordLength = 3
+var (
+	minWordLength int
 )
+
+func SetMinWordLength(minLength int) {
+	minWordLength = minLength
+}
 
 // Difficulty calculates finger moving difficulty for word
 func Difficulty(w string) (int, error) {

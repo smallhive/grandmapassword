@@ -3,6 +3,7 @@ package word
 import (
 	"context"
 	"runtime"
+	"sync"
 
 	"github.com/pkg/errors"
 	worker_pool "github.com/smallhive/worker-pool"
@@ -26,8 +27,13 @@ func loadDictionary(ctx context.Context, words []string) Dictionary {
 	dictionary := make(Dictionary, 0, len(words))
 	dictionaryChan := make(chan Word, runtime.NumCPU())
 
+	wg := sync.WaitGroup{}
+	wg.Add(1)
+
 	// store processed word to the dictionary
 	go func() {
+		defer wg.Done()
+
 		for {
 			pw, ok := <-dictionaryChan
 			if !ok {
@@ -60,6 +66,8 @@ func loadDictionary(ctx context.Context, words []string) Dictionary {
 
 	pool.Produce(ctx, producer)
 	close(dictionaryChan)
+
+	wg.Wait()
 
 	return dictionary
 }
