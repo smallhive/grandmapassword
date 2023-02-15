@@ -24,8 +24,8 @@ func difficulty(w string) int {
 
 	for i := 0; i < len(w)-1; i++ {
 		d += keyboard.Distance(
-			string(w[i]),
-			string(w[i+1]),
+			rune(w[i]),
+			rune(w[i+1]),
 		)
 	}
 

@@ -42,7 +42,7 @@ func TestDistance(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Distance(tt.args.a, tt.args.b); got != tt.want {
+			if got := Distance([]rune(tt.args.a)[0], []rune(tt.args.b)[0]); got != tt.want {
 				t.Errorf("Distance() = %v, want %v", got, tt.want)
 			}
 		})

@@ -46,7 +46,7 @@ func (a Dictionary) Collapse() Word {
 		// difficulty between words
 		if i > 0 {
 			prevW := a[i-1].Word
-			word.Difficulty += keyboard.Distance(string(w.Word[0]), string(prevW[len(prevW)-1]))
+			word.Difficulty += keyboard.Distance(rune(w.Word[0]), rune(prevW[len(prevW)-1]))
 		}
 	}
 
