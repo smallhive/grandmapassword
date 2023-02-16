@@ -75,6 +75,11 @@ func generatePairs(words word.Dictionary) PairSlice {
 			a := i
 			b := j
 
+			sum := words[a].Length + words[b].Length
+			if sum > maxPairLength {
+				continue
+			}
+
 			// try to understand the best combination of words
 			d1 := words[i].Distance(words[j])
 			d2 := words[j].Distance(words[i])
@@ -83,11 +88,6 @@ func generatePairs(words word.Dictionary) PairSlice {
 				a = j
 				b = i
 				d = d2
-			}
-
-			sum := words[a].Length + words[b].Length
-			if sum > maxPairLength {
-				continue
 			}
 
 			p := Pair{
