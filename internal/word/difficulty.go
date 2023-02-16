@@ -8,6 +8,8 @@ import (
 
 var (
 	minWordLength int
+
+	ErrWordTooShort = errors.New("word too short")
 )
 
 func SetMinWordLength(minLength int) {

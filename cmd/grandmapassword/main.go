@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/smallhive/grandmapassword/internal/passwd"
 	"github.com/smallhive/grandmapassword/internal/word"
@@ -15,10 +14,10 @@ const (
 )
 
 func main() {
-	word.SetMinWordLength(minLength)
 	ctx := context.Background()
+	word.SetMinWordLength(minLength)
 
-	loader := word.NewFileLoader("words.txt")
+	loader := word.NewFileLoader("words.txt", minLength)
 	dictionary, err := word.LoadDictionary(ctx, loader)
 	if err != nil {
 		log.Fatal(err)
@@ -29,5 +28,5 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println(pwd)
+	fmt.Println("Password", pwd)
 }

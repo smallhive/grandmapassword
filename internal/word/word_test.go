@@ -5,6 +5,8 @@ import (
 )
 
 func TestDifficulty(t *testing.T) {
+	SetMinWordLength(3)
+
 	type args struct {
 		w string
 	}

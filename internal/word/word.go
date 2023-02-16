@@ -3,13 +3,7 @@ package word
 import (
 	"fmt"
 
-	"github.com/pkg/errors"
-
 	"github.com/smallhive/grandmapassword/internal/keyboard"
-)
-
-var (
-	ErrWordTooShort = errors.New("word too short")
 )
 
 type Word struct {
@@ -19,10 +13,14 @@ type Word struct {
 }
 
 func (w Word) String() string {
-	return fmt.Sprintf("length:%d  difficulty:%d  %s", w.Length, w.Difficulty, w.Word)
+	return fmt.Sprintf("%s l=%d,d=%d  ", w.Word, w.Length, w.Difficulty)
 }
 
 type Dictionary []Word
+
+func (w Word) Distance(w2 Word) int {
+	return keyboard.Distance(rune(w.Word[len(w.Word)-1]), rune(w2.Word[0]))
+}
 
 func (a Dictionary) Len() int { return len(a) }
 

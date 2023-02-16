@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	"github.com/pkg/errors"
+
 	worker_pool "github.com/smallhive/worker-pool"
 )
 
