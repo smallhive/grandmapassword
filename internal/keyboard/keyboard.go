@@ -15,11 +15,12 @@ var (
 		{'z', 'x', 'c', 'v', 'b', 'n', 'm', emptyRune, emptyRune, emptyRune},
 	}
 
-	keysDistance map[rune]map[rune]int
+	// letter z has 122 index in asci table
+	keysDistance [123][123]int
 )
 
 func init() {
-	keysDistance = make(map[rune]map[rune]int)
+	keysDistance = [123][123]int{}
 	calculate()
 }
 
@@ -29,17 +30,7 @@ func key(a, b rune) int {
 }
 
 func Distance(a, b rune) int {
-	level1, ok := keysDistance[a]
-	if !ok {
-		return 0
-	}
-
-	v, ok := level1[b]
-	if !ok {
-		return 0
-	}
-
-	return v
+	return keysDistance[a][b]
 }
 
 func calculate() {
@@ -65,16 +56,6 @@ func calculateKeyboardWithEachRow(originRowID int, pivotID int, pivot rune) {
 func symbolDistance(letter rune, originRowID, keyBoardRowID, pivotID, i int, pivot rune) {
 	if letter == emptyRune {
 		return
-	}
-
-	_, ok := keysDistance[pivot]
-	if !ok {
-		keysDistance[pivot] = make(map[rune]int)
-	}
-
-	_, ok = keysDistance[letter]
-	if !ok {
-		keysDistance[letter] = make(map[rune]int)
 	}
 
 	if pivot == letter {

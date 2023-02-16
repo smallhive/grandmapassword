@@ -43,6 +43,8 @@ func hasIndexIntersection(a, b Pair) bool {
 }
 
 func Generate(words word.Dictionary) (*word.Word, error) {
+	fmt.Println("dictionary", len(words))
+
 	t := time.Now()
 	pairs := generatePairs(words)
 	fmt.Println("generatePairs", time.Since(t))
@@ -63,8 +65,8 @@ func Generate(words word.Dictionary) (*word.Word, error) {
 
 func generatePairs(words word.Dictionary) PairSlice {
 	length := len(words)
-	bestDifficultByLength := make(map[int]int)
-	bestPairsByLength := make(map[int][]Pair)
+	bestDifficultByLength := [maxPairLength + 1]int{}
+	bestPairsByLength := [maxPairLength + 1][]Pair{}
 
 	d := 0
 
@@ -97,8 +99,8 @@ func generatePairs(words word.Dictionary) PairSlice {
 				W2:         words[b],
 			}
 
-			perfectDifficulty, ok := bestDifficultByLength[p.Sum]
-			if !ok {
+			perfectDifficulty := bestDifficultByLength[p.Sum]
+			if perfectDifficulty == 0 {
 				bestDifficultByLength[p.Sum] = p.Difficulty
 				bestPairsByLength[p.Sum] = []Pair{p}
 				continue
