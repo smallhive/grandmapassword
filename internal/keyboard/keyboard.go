@@ -15,11 +15,11 @@ var (
 		{'z', 'x', 'c', 'v', 'b', 'n', 'm', emptyRune, emptyRune, emptyRune},
 	}
 
-	keysDistance map[int]int
+	keysDistance map[rune]map[rune]int
 )
 
 func init() {
-	keysDistance = make(map[int]int)
+	keysDistance = make(map[rune]map[rune]int)
 	calculate()
 }
 
@@ -29,13 +29,17 @@ func key(a, b rune) int {
 }
 
 func Distance(a, b rune) int {
-	k := key(a, b)
-	d, ok := keysDistance[k]
+	level1, ok := keysDistance[a]
 	if !ok {
 		return 0
 	}
 
-	return d
+	v, ok := level1[b]
+	if !ok {
+		return 0
+	}
+
+	return v
 }
 
 func calculate() {
@@ -63,20 +67,24 @@ func symbolDistance(letter rune, originRowID, keyBoardRowID, pivotID, i int, piv
 		return
 	}
 
-	storageKey := key(pivot, letter)
-	_, ok := keysDistance[storageKey]
-	if ok {
-		return
+	_, ok := keysDistance[pivot]
+	if !ok {
+		keysDistance[pivot] = make(map[rune]int)
+	}
+
+	_, ok = keysDistance[letter]
+	if !ok {
+		keysDistance[letter] = make(map[rune]int)
 	}
 
 	if pivot == letter {
-		keysDistance[storageKey] = 0
+		keysDistance[pivot][pivot] = 0
 		return
 	}
 
 	// manhattan keysDistance
 	distance := int(math.Abs(float64(originRowID-keyBoardRowID))) + int(math.Abs(float64(pivotID-i)))
 
-	keysDistance[storageKey] = distance
-	keysDistance[key(letter, pivot)] = distance
+	keysDistance[pivot][letter] = distance
+	keysDistance[letter][pivot] = distance
 }
