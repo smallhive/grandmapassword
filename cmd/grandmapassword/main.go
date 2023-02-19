@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/smallhive/grandmapassword/internal/passwd"
 	"github.com/smallhive/grandmapassword/internal/word"
@@ -23,6 +24,8 @@ func main() {
 		fileToLoad = os.Args[1]
 	}
 
+	t := time.Now()
+
 	ctx := context.Background()
 	word.SetMinWordLength(minLength)
 
@@ -37,5 +40,5 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Password", pwd)
+	fmt.Println("\nPassword", pwd, "generated in", time.Since(t))
 }

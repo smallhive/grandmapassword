@@ -29,6 +29,7 @@ const (
 
 	// 24 is a total length. Min sum length other pair should be minimum 6
 	maxPairLength = 18
+	maxWordLength = 9
 )
 
 func isLengthOk(totalLength int) bool {
@@ -45,13 +46,15 @@ func hasIndexIntersection(a, b Pair) bool {
 func Generate(words word.Dictionary) (*word.Word, error) {
 	fmt.Println("dictionary", len(words))
 
+	filteredWords := filterWords(words)
+
 	t := time.Now()
-	pairs := generatePairs(words)
+	pairs := generatePairs(filteredWords)
 	fmt.Println("generatePairs", time.Since(t))
 	sort.Sort(pairs)
 
 	t = time.Now()
-	variants := generateVariants(words, pairs)
+	variants := generateVariants(filteredWords, pairs)
 	fmt.Println("generateVariants", time.Since(t))
 	sort.Sort(variants)
 
@@ -61,6 +64,47 @@ func Generate(words word.Dictionary) (*word.Word, error) {
 
 	// return best password according its difficulty
 	return &variants[0], nil
+}
+
+func filterWords(words word.Dictionary) word.Dictionary {
+	var filteredWords []word.Word
+
+	bestDifficultByLength := [maxWordLength + 1]int{}
+	bestWordsByLength := [maxWordLength + 1]word.Dictionary{}
+
+	var total, actual int
+
+	for _, w := range words {
+		total++
+		if w.Length > maxWordLength {
+			continue
+		}
+
+		bestDifficulty := bestDifficultByLength[w.Length]
+		if bestDifficulty == 0 {
+			actual++
+			bestDifficultByLength[w.Length] = w.Difficulty
+			bestWordsByLength[w.Length] = append(bestWordsByLength[w.Length], w)
+			continue
+		}
+
+		if w.Difficulty > bestDifficulty {
+			continue
+		}
+
+		actual++
+		bestDifficultByLength[w.Length] = w.Difficulty
+		bestWordsByLength[w.Length] = append(bestWordsByLength[w.Length], w)
+	}
+
+	for _, wordList := range bestWordsByLength {
+		sort.Sort(wordList)
+
+		filteredWords = append(filteredWords, wordList...)
+	}
+
+	fmt.Println("Left words after filtering", actual)
+	return filteredWords
 }
 
 func generatePairs(words word.Dictionary) PairSlice {

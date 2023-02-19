@@ -63,23 +63,37 @@ You should read this like:
 ### Measurements
 
 ```shell
-$ ./build/bin/grandmapassword 
+$ ./build/bin/grandmapassword
 dictionary 4798
-generatePairs 173.34465ms
-generateVariants 1.884765ms
-Password wwwweeddeferreddress l=20,d=15 
+Left words after filtering 59
+generatePairs 52.793µs
+generateVariants 324.206µs
 
-$ ./build/bin/grandmapassword words_10k.txt 
+Password wwwweeddeferreddress l=20,d=15   generated in 6.609265ms
+
+$ ./build/bin/grandmapassword words_10k.txt
 dictionary 9578
-generatePairs 691.574905ms
-generateVariants 2.434074ms
-Password weeddeerreeddeferred l=20,d=14
+Left words after filtering 79
+generatePairs 82.761µs
+generateVariants 591.608µs
 
-$ ./build/bin/grandmapassword words_100k.txt 
+Password weeddeerreeddeferred l=20,d=14   generated in 14.850093ms
+
+$ ./build/bin/grandmapassword words_92k.txt
 dictionary 92422
-generatePairs 47.30321564s
-generateVariants 22.46303ms
-Password wedderreedeessweewee l=20,d=13
+Left words after filtering 76
+generatePairs 81.47µs
+generateVariants 553.938µs
+
+Password wedderreeredeeddeess l=20,d=13   generated in 64.656012ms
+
+$ ./build/bin/grandmapassword words_370k.txt
+dictionary 369652
+Left words after filtering 150
+generatePairs 283.463µs
+generateVariants 3.637333ms
+
+Password aaaaasweeweeddeedeed l=20,d=10   generated in 259.223503ms
 ```
 
 ## Build
